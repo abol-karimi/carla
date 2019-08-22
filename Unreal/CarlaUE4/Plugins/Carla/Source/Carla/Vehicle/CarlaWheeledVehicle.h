@@ -16,6 +16,8 @@
 
 #include "CoreMinimal.h"
 
+#include "VehicleSignalState.h"
+
 #include "CarlaWheeledVehicle.generated.h"
 
 class UBoxComponent;
@@ -88,6 +90,13 @@ public:
   /// Get the maximum angle at which the front wheel can steer.
   UFUNCTION(Category = "CARLA Wheeled Vehicle", BlueprintCallable)
   float GetMaximumSteerAngle() const;
+
+  /// Get the turn signal state.
+  UFUNCTION(Category = "CARLA Wheeled Vehicle", BlueprintCallable)
+  virtual EVehicleSignalState GetSignalState() const
+  {
+	  return Signal;
+  }
 
   /// @}
   // ===========================================================================
@@ -176,6 +185,12 @@ public:
 
   void SetWheelsFrictionScale(TArray<float> &WheelsFrictionScale);
 
+  UFUNCTION(Category = "CARLA Wheeled Vehicle", BlueprintCallable)
+  virtual void SetSignal(EVehicleSignalState Signal)
+  {
+	  this->Signal = Signal;
+  }
+
   /// @}
   // ===========================================================================
   /// @name Overriden from AActor
@@ -194,6 +209,9 @@ private:
 
   UPROPERTY(Category = "CARLA Wheeled Vehicle", EditAnywhere)
   UBoxComponent *VehicleBounds;
+
+  UPROPERTY(EditAnywhere, Category = Enum)
+  EVehicleSignalState Signal = EVehicleSignalState::Off;
 
   struct
   {
