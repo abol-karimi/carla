@@ -84,7 +84,11 @@ bool FCarlaModule::HandleSettingsSaved()
 
 #undef LOCTEXT_NAMESPACE
 
+#if WITH_EDITOR
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, Carla, "Carla")
+#else
 IMPLEMENT_MODULE(FCarlaModule, Carla)
+#endif
 
 // =============================================================================
 // -- Implement carla throw_exception ------------------------------------------
