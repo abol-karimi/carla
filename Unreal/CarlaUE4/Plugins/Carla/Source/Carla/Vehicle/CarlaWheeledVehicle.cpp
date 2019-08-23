@@ -210,6 +210,11 @@ void ACarlaWheeledVehicle::SetWheelsFrictionScale(TArray<float> &WheelsFrictionS
   }
 }
 
+void ACarlaWheeledVehicle::SetSignal_Implementation(EVehicleSignalState Signal)
+{
+	this->Signal = Signal;
+}
+
 FVehiclePhysicsControl ACarlaWheeledVehicle::GetVehiclePhysicsControl()
 {
   UWheeledVehicleMovementComponent4W *Vehicle4W = Cast<UWheeledVehicleMovementComponent4W>(

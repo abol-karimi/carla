@@ -15,7 +15,6 @@ Plugins/Carla/Saved
 
 Content/*
 !Content/Monitor/
-!Content/Carla/Blueprints/Vehicles/ChevroletImpala/BP_ChevroletImpala.uasset
 
 Config/CarlaSettings.ini
 Config/DefaultEditor.ini

@@ -185,11 +185,8 @@ public:
 
   void SetWheelsFrictionScale(TArray<float> &WheelsFrictionScale);
 
-  UFUNCTION(Category = "CARLA Wheeled Vehicle", BlueprintCallable)
-  virtual void SetSignal(EVehicleSignalState Signal)
-  {
-	  this->Signal = Signal;
-  }
+  UFUNCTION(Category = "CARLA Wheeled Vehicle", BlueprintNativeEvent, BlueprintCallable)
+  void SetSignal(EVehicleSignalState Signal);
 
   /// @}
   // ===========================================================================
