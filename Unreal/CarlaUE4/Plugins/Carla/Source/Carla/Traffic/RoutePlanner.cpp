@@ -138,6 +138,15 @@ void ARoutePlanner::AssignRandomRoute(AWheeledVehicleAIController &Controller) c
       }
 
       Controller.SetFixedRoute(WayPoints);
+	  if (bIsIntersection)
+	  {
+		  Controller.SetTurnSignal(Route);
+	  }
+	  else
+	  {
+		  Controller.SetTurnSignal(EVehicleSignalState::Off);
+	  }
+	  
     }
     else
     {

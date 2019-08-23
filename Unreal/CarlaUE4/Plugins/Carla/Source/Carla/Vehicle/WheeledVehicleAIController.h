@@ -209,6 +209,9 @@ public:
   UFUNCTION(Category = "Wheeled Vehicle Controller", BlueprintCallable)
   void SetFixedRoute(const TArray<FVector> &Locations, bool bOverwriteCurrent = true);
 
+  /// Set the rurn signal
+  void SetTurnSignal(EVehicleSignalState Signal);
+
   /// Set the turn signal based on the overall turn of the Route.
   void SetTurnSignal(const USplineComponent* Route);
 

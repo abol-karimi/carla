@@ -213,6 +213,11 @@ void AWheeledVehicleAIController::SetFixedRoute(
   }
 }
 
+void AWheeledVehicleAIController::SetTurnSignal(EVehicleSignalState Signal)
+{
+	Vehicle->SetSignal(Signal);
+}
+
 void AWheeledVehicleAIController::SetTurnSignal(const USplineComponent* Route)
 {
 	auto StartTangent = Route->GetTangentAtSplinePoint(0, ESplineCoordinateSpace::World); // check length is positive
