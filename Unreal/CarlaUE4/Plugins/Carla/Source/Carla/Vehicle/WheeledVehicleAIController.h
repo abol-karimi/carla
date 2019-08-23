@@ -9,6 +9,7 @@
 #include <queue>
 
 #include "GameFramework/Controller.h"
+#include "Runtime/Engine/Classes/Components/SplineComponent.h"
 
 #include "Traffic/TrafficLightState.h"
 #include "Vehicle/VehicleControl.h"
@@ -207,6 +208,9 @@ public:
   /// Set a fixed route to follow if autopilot is enabled.
   UFUNCTION(Category = "Wheeled Vehicle Controller", BlueprintCallable)
   void SetFixedRoute(const TArray<FVector> &Locations, bool bOverwriteCurrent = true);
+
+  /// Set the turn signal based on the overall turn of the Route.
+  void SetTurnSignal(const USplineComponent* Route);
 
   /// @}
 

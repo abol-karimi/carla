@@ -213,6 +213,29 @@ void AWheeledVehicleAIController::SetFixedRoute(
   }
 }
 
+void AWheeledVehicleAIController::SetTurnSignal(const USplineComponent* Route)
+{
+	auto StartTangent = Route->GetTangentAtSplinePoint(0, ESplineCoordinateSpace::World); // check length is positive
+	auto EndTangent = Route->GetTangentAtSplinePoint(Route->GetNumberOfSplinePoints() - 1, ESplineCoordinateSpace::World); // check length is positive
+
+	auto Z = FVector::CrossProduct(StartTangent, EndTangent).Z;
+	auto Cosine = StartTangent.CosineAngle2D(FVector::VectorPlaneProject(EndTangent, FVector(0.f, 0.f, 1.f)));
+
+	EVehicleSignalState Signal = EVehicleSignalState::Off;
+	if (Cosine < 0.7f) // turning angle more than 45 degrees
+	{
+		if (Z < 0)
+		{
+			Signal = EVehicleSignalState::Left;
+		}
+		else
+		{
+			Signal = EVehicleSignalState::Right;
+		}
+	}
+	Vehicle->SetSignal(Signal);
+}
+
 // =============================================================================
 // -- AI -----------------------------------------------------------------------
 // =============================================================================
