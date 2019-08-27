@@ -116,6 +116,7 @@ public class Carla : ModuleRules
     {
       AddBoostLibs(Path.Combine(LibCarlaInstallPath, "lib"));
       PublicAdditionalLibraries.Add(Path.Combine(LibCarlaInstallPath, "lib", GetLibName("rpc")));
+      PublicAdditionalLibraries.Add(Path.Combine(LibCarlaInstallPath, "lib", GetLibName("import_clingo")));
 
       if (UseDebugLibs(Target))
       {
@@ -144,6 +145,9 @@ public class Carla : ModuleRules
 
     PublicIncludePaths.Add(LibCarlaIncludePath);
     PrivateIncludePaths.Add(LibCarlaIncludePath);
+
+    string LibClingoIncludePath = Path.Combine(LibCarlaInstallPath, "include/libclingo");
+    PrivateIncludePaths.Add(LibClingoIncludePath);
 
     PublicDefinitions.Add("ASIO_NO_EXCEPTIONS");
     PublicDefinitions.Add("BOOST_NO_EXCEPTIONS");
