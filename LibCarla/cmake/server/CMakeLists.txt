@@ -10,6 +10,11 @@ install(DIRECTORY "${RPCLIB_INCLUDE_PATH}/rpc" DESTINATION include)
 file(GLOB libcarla_carla_rpclib "${RPCLIB_LIB_PATH}/*.*")
 install(FILES ${libcarla_carla_rpclib} DESTINATION lib)
 
+# Install Clingo.
+file(GLOB clingo_headers "${CLINGO_INCLUDE_PATH}/*.*")
+install(FILES ${clingo_headers} DESTINATION include/clingo)
+install(FILES ${CLINGO_LIB_PATH}/import_clingo.lib DESTINATION lib)
+
 # Install headers.
 
 install(DIRECTORY "${libcarla_source_path}/compiler" DESTINATION include)

@@ -146,7 +146,7 @@ public class Carla : ModuleRules
     PublicIncludePaths.Add(LibCarlaIncludePath);
     PrivateIncludePaths.Add(LibCarlaIncludePath);
 
-    string LibClingoIncludePath = Path.Combine(LibCarlaInstallPath, "include/libclingo");
+    string LibClingoIncludePath = Path.Combine(LibCarlaInstallPath, "include/clingo");
     PrivateIncludePaths.Add(LibClingoIncludePath);
 
     PublicDefinitions.Add("ASIO_NO_EXCEPTIONS");

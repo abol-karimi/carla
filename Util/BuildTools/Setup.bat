@@ -109,6 +109,21 @@ if not defined install_libpng (
 )
 
 rem ============================================================================
+rem -- Download and install clingo ---------------------------------------------
+rem ============================================================================
+
+echo %FILE_N% Installing Clingo...
+call "%INSTALLERS_DIR%install_clingo.bat"^
+ --build-dir "%INSTALLATION_DIR%"
+
+if %errorlevel% neq 0 goto failed
+
+if not defined install_clingo (
+    echo %FILE_N% Failed while installing Clingo.
+    goto failed
+)
+
+rem ============================================================================
 rem -- Download and install rpclib ---------------------------------------------
 rem ============================================================================
 
@@ -213,6 +228,9 @@ set CMAKE_CONFIG_FILE="%INSTALLATION_DIR%CMakeLists.txt.in"
 >>"%CMAKE_CONFIG_FILE%" echo.
 >>"%CMAKE_CONFIG_FILE%" echo set(BOOST_INCLUDE_PATH "%CMAKE_INSTALLATION_DIR%boost-%BOOST_VERSION%-install/include")
 >>"%CMAKE_CONFIG_FILE%" echo set(BOOST_LIB_PATH "%CMAKE_INSTALLATION_DIR%boost-%BOOST_VERSION%-install/lib")
+>>"%CMAKE_CONFIG_FILE%" echo.
+>>"%CMAKE_CONFIG_FILE%" echo set(CLINGO_INCLUDE_PATH "%CMAKE_INSTALLATION_DIR%clingo-install/include")
+>>"%CMAKE_CONFIG_FILE%" echo set(CLINGO_LIB_PATH "%CMAKE_INSTALLATION_DIR%clingo-install/lib")
 >>"%CMAKE_CONFIG_FILE%" echo.
 >>"%CMAKE_CONFIG_FILE%" echo set(RPCLIB_INCLUDE_PATH "%CMAKE_INSTALLATION_DIR%rpclib-install/include")
 >>"%CMAKE_CONFIG_FILE%" echo set(RPCLIB_LIB_PATH "%CMAKE_INSTALLATION_DIR%rpclib-install/lib")
