@@ -13,7 +13,8 @@ install(FILES ${libcarla_carla_rpclib} DESTINATION lib)
 # Install Clingo.
 file(GLOB clingo_headers "${CLINGO_INCLUDE_PATH}/*.*")
 install(FILES ${clingo_headers} DESTINATION include/clingo)
-install(FILES ${CLINGO_LIB_PATH}/import_clingo.lib DESTINATION lib)
+file(GLOB clingo_libs "${CLINGO_LIB_PATH}/*.*")
+install(FILES ${clingo_libs} DESTINATION lib)
 
 # Install headers.
 
