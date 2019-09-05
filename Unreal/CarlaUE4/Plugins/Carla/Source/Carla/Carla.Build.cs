@@ -130,6 +130,7 @@ public class Carla : ModuleRules
     else
     {
       PublicAdditionalLibraries.Add(Path.Combine(LibCarlaInstallPath, "lib", GetLibName("rpc")));
+      PublicAdditionalLibraries.Add(Path.Combine(LibCarlaInstallPath, "lib", "libclingo.so"));
       if (UseDebugLibs(Target))
       {
         PublicAdditionalLibraries.Add(Path.Combine(LibCarlaInstallPath, "lib", GetLibName("carla_server_debug")));
@@ -146,7 +147,7 @@ public class Carla : ModuleRules
     PublicIncludePaths.Add(LibCarlaIncludePath);
     PrivateIncludePaths.Add(LibCarlaIncludePath);
 
-    string LibClingoIncludePath = Path.Combine(LibCarlaInstallPath, "include/clingo");
+    string LibClingoIncludePath = Path.Combine(LibCarlaIncludePath, "clingo");
     PrivateIncludePaths.Add(LibClingoIncludePath);
 
     PublicDefinitions.Add("ASIO_NO_EXCEPTIONS");

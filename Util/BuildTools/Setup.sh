@@ -154,6 +154,51 @@ fi
 unset BOOST_BASENAME
 
 # ==============================================================================
+# -- Get Clingo and compile it with libc++ -----------------------
+# ==============================================================================
+
+CLINGO_BASENAME=clingo-${CXX_TAG}
+
+CLINGO_INCLUDE=${PWD}/${CLINGO_BASENAME}-install/include
+CLINGO_LIBPATH=${PWD}/${CLINGO_BASENAME}-install/lib
+
+if [[ -d "${CLINGO_BASENAME}-install" ]] ; then
+  log "${CLINGO_BASENAME} already installed."
+else
+  rm -Rf \
+      ${CLINGO_BASENAME}-source \
+      ${CLINGO_BASENAME}-build \
+      ${CLINGO_BASENAME}-install
+
+  log "Retrieving clingo."
+
+  git clone https://github.com/potassco/clingo.git ${CLINGO_BASENAME}-source
+  pushd ${CLINGO_BASENAME}-source >/dev/null
+  git submodule update --init --recursive
+  popd >/dev/null
+
+  log "Building clingo with clang."
+
+  cmake -H${CLINGO_BASENAME}-source \
+      -B${CLINGO_BASENAME}-build \
+      -DCLINGO_BUILD_APPS=Off \
+      -DCLINGO_BUILD_SHARED=On \
+      -DCLINGO_BUILD_WITH_PYTHON=Off \
+      -DCLINGO_BUILD_WITH_LUA=Off \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX="${CLINGO_BASENAME}-install" \
+      -DCMAKE_CXX_FLAGS="-fPIC -std=c++14 " \
+
+  cmake --build ${CLINGO_BASENAME}-build
+  cmake --build ${CLINGO_BASENAME}-build --target install
+
+  rm -Rf ${CLINGO_BASENAME}-source ${CLINGO_BASENAME}-build
+
+fi
+
+unset CLINGO_BASENAME
+
+# ==============================================================================
 # -- Get rpclib and compile it with libc++ and libstdc++ -----------------------
 # ==============================================================================
 
@@ -428,6 +473,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Server")
   set(RPCLIB_LIB_PATH "${RPCLIB_LIBCXX_LIBPATH}")
   set(GTEST_INCLUDE_PATH "${GTEST_LIBCXX_INCLUDE}")
   set(GTEST_LIB_PATH "${GTEST_LIBCXX_LIBPATH}")
+  set(CLINGO_INCLUDE_PATH "${CLINGO_INCLUDE}")
+  set(CLINGO_LIB_PATH "${CLINGO_LIBPATH}")
 elseif (CMAKE_BUILD_TYPE STREQUAL "Client")
   # Here libraries linking libstdc++.
   set(RPCLIB_INCLUDE_PATH "${RPCLIB_LIBSTDCXX_INCLUDE}")
