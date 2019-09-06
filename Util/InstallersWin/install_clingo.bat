@@ -63,6 +63,9 @@ echo %FILE_N% Generating build...
 cmake -H%CLINGO_SRC_DIR%^
     -B%CLINGO_BUILD_DIR%^
     -DCLINGO_BUILD_APPS=OFF^
+    -DCLINGO_BUILD_SHARED=On^
+    -DCLINGO_BUILD_WITH_PYTHON=Off^
+    -DCLINGO_BUILD_WITH_LUA=Off^
     -G "Visual Studio 15 2017 Win64"^
     -DCMAKE_BUILD_TYPE=Release^
     -DCMAKE_CXX_FLAGS_RELEASE="/MD /MP"^
