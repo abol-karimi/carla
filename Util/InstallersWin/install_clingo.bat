@@ -68,7 +68,8 @@ cmake -H%CLINGO_SRC_DIR%^
     -DCLINGO_BUILD_WITH_LUA=Off^
     -G "Visual Studio 15 2017 Win64"^
     -DCMAKE_BUILD_TYPE=Release^
-    -DCMAKE_CXX_FLAGS_RELEASE="/MD /MP"^
+    -DCMAKE_CXX_FLAGS_RELEASE="/MT /O2 /Ob2 /DNDEBUG"^
+    -DCMAKE_C_FLAGS_RELEASE="/MT /O2 /Ob2 /DNDEBUG"^
     -DCMAKE_INSTALL_PREFIX=%CLINGO_INSTALL_DIR%
 if %errorlevel%  neq 0 goto error_cmake
 
