@@ -13,7 +13,7 @@ AExit::AExit(const FObjectInitializer &ObjectInitializer)
 
 	TriggerVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerVolume"));
 	TriggerVolume->SetupAttachment(RootComponent);
-	TriggerVolume->SetHiddenInGame(false);
+	TriggerVolume->SetHiddenInGame(true);
 	TriggerVolume->SetMobility(EComponentMobility::Static);
 	TriggerVolume->SetCollisionProfileName(FName("OverlapAll"));
 	TriggerVolume->SetGenerateOverlapEvents(true);

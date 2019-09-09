@@ -16,7 +16,7 @@ AFork::AFork(const FObjectInitializer &ObjectInitializer)
 
 	EntranceTriggerVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Entrance"));
 	EntranceTriggerVolume->SetupAttachment(RootComponent);
-	EntranceTriggerVolume->SetHiddenInGame(false);
+	EntranceTriggerVolume->SetHiddenInGame(true);
 	EntranceTriggerVolume->SetMobility(EComponentMobility::Static);
 	EntranceTriggerVolume->SetCollisionProfileName(FName("OverlapAll"));
 	EntranceTriggerVolume->SetGenerateOverlapEvents(true);
@@ -26,7 +26,7 @@ AFork::AFork(const FObjectInitializer &ObjectInitializer)
 
 	ArrivalTriggerVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Arrival"));
 	ArrivalTriggerVolume->SetupAttachment(RootComponent);
-	ArrivalTriggerVolume->SetHiddenInGame(false);
+	ArrivalTriggerVolume->SetHiddenInGame(true);
 	ArrivalTriggerVolume->SetMobility(EComponentMobility::Static);
 	ArrivalTriggerVolume->SetCollisionProfileName(FName("OverlapAll"));
 	ArrivalTriggerVolume->SetGenerateOverlapEvents(true);
