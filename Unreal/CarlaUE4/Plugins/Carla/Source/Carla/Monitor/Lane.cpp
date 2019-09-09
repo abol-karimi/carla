@@ -26,6 +26,8 @@ ALane::ALane(const FObjectInitializer &ObjectInitializer)
 	static ConstructorHelpers::FObjectFinder<UMaterial> MaterialFinder
 	(TEXT("Material'/Game/Monitor/TransparentBlue_M.TransparentBlue_M'"));
 	Material = MaterialFinder.Object;
+
+	SetActorHiddenInGame(true);
 }
 
 void ALane::OnConstruction(const FTransform &Transform)

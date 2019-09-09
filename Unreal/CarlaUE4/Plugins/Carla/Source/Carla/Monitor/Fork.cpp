@@ -40,6 +40,8 @@ AFork::AFork(const FObjectInitializer &ObjectInitializer)
 	ForwardArrow->SetMobility(EComponentMobility::Static);
 	ForwardArrow->SetWorldScale3D(FVector{ 3.f, 3.f, 3.f });
 	ForwardArrow->SetArrowColor(FLinearColor(0, 255, 0));
+
+	SetActorHiddenInGame(true);
 }
 
 // Called when the game starts or when spawned

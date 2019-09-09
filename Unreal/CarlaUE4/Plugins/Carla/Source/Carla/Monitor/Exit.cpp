@@ -25,6 +25,8 @@ AExit::AExit(const FObjectInitializer &ObjectInitializer)
 	ForwardArrow->SetHiddenInGame(true);
 	ForwardArrow->SetMobility(EComponentMobility::Static);
 	ForwardArrow->SetWorldScale3D(FVector{ 3.f, 3.f, 3.f });
+
+	SetActorHiddenInGame(true);
 }
 
 // Called when the game starts or when spawned
