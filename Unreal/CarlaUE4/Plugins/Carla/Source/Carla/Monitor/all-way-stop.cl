@@ -1,10 +1,16 @@
 %-----------------Traffic--------------
-insideTheIntersection(Vehicle):-
+inTheIntersection(Vehicle):-
   entersForkAtTime(Vehicle, _, _).
 
 atTheIntersection(Vehicle):-
   arrivesAtForkAtTime(Vehicle, _, _),
-  not insideTheIntersection(Vehicle).
+  not inTheIntersection(Vehicle).
+
+atOrInTheIntersection(Vehicle):-
+  inTheIntersection(Vehicle).
+
+atOrInTheIntersection(Vehicle):-
+  atTheIntersection(Vehicle).
 
 isAtFork(Vehicle, Fork):-
   arrivesAtForkAtTime(Vehicle, Fork, Time),
@@ -24,13 +30,13 @@ isToTheRightOf(Vehicle1, Vehicle2):-
   isAtFork(Vehicle2, Fork2),
   isToTheRightOf(Fork1, Fork2).
 
-leftLane(Vehicle, Lane):-
+leftTheLane(Vehicle, Lane):-
   leavesLaneAtTime(Vehicle, Lane, _).
 
 % Does not handle re-entries.
 isOnLane(Vehicle, Lane):-
   entersLaneAtTime(Vehicle, Lane, _),
-  not leftLane(Vehicle, Lane).
+  not leftTheLane(Vehicle, Lane).
 
 laneOnFork(Lane, Fork):-
   laneFromTo(Lane, Fork, _).
@@ -50,12 +56,30 @@ reservedLane(Vehicle, Lane):-
 
 %---------------- Rules ---------------
 % Page 35:
+% At intersections without “STOP” or “YIELD” signs,
+%  yield to traffic and pedestrians already in the intersection
+%  or just entering the intersection.
+mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside):-
+  atTheIntersection(Vehicle1),
+  inTheIntersection(Vehicle2).
+
+mustStopToYield(Vehicle1):-
+  mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside),
+  wantsLane(Vehicle1, Lane1),
+  overlaps(Lane1, Lane2),
+  reservedLane(Vehicle2, Lane2),
+  not leftTheLane(Vehicle2, Lane1).
+
+% Page 35:
 % When there are “STOP” signs at all corners,
 %  yield to the vehicle or bicycle that arrives first.
 mustYieldToForRule(Vehicle2, Vehicle1, firstInFirstOut):-
   atTheIntersection(Vehicle1),
   atTheIntersection(Vehicle2),
   arrivedEarlierThan(Vehicle1, Vehicle2).
+
+mustStopToYield(Vehicle):-
+  mustYieldToForRule(Vehicle, _, firstInFirstOut).
 
 % Page 35:
 % When there are “STOP” signs at all corners,
@@ -67,20 +91,14 @@ mustYieldToForRule(Vehicle1, Vehicle2, yieldToRight):-
   arrivedSameTime(Vehicle1, Vehicle2),
   isToTheRightOf(Vehicle2, Vehicle1).
 
-mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside):-
-  atTheIntersection(Vehicle1),
-  wantsLane(Vehicle1, Lane1),
-  overlaps(Lane1, Lane2),
-  reservedLane(Vehicle2, Lane2),
-  not leftLane(Vehicle2, Lane1).
+mustStopToYield(Vehicle):-
+  mustYieldToForRule(Vehicle, _, yieldToRight).
 
 %-------------------------------------------------
-mustYield(Vehicle):-
-  mustYieldToForRule(Vehicle, _, _).
-
 hasRightOfWay(Vehicle):-
-  arrivesAtForkAtTime(Vehicle, _, _),
-  not mustYield(Vehicle).
+  atOrInTheIntersection(Vehicle),
+  not mustStopToYield(Vehicle).
 
 #show mustYieldToForRule/3.
+#show mustStopToYield/1.
 #show hasRightOfWay/1.

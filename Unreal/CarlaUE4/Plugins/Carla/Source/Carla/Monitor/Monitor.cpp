@@ -416,15 +416,15 @@ void AMonitor::Solve()
 		for (auto &model : solveHandle) {
 			FString Model;
 			for (auto &atom : model.symbols()) {
-				if (atom.match("mustYieldToForRule", 3))
+				if (atom.match("mustStopToYield", 1))
 				{
-					FString YieldingVehicleName = FString(atom.arguments()[0].name()).RightChop(2);
+					FString YieldingVehicleName = FString(atom.arguments()[0].name()).RightChop(2); // Chop "v_" off of the name
 					ACarlaWheeledVehicle* YieldingVehicle = VehiclePointers[YieldingVehicleName];
 					AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(YieldingVehicle->GetController());
 					if (Controller != nullptr)
 					{
 						Controller->SetTrafficLightState(ETrafficLightState::Red);
-						UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to yield!"), *YieldingVehicleName);
+						UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to stop!"), *YieldingVehicleName);
 					}
 					else
 					{
