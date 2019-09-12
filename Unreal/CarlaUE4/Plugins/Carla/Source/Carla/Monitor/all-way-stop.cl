@@ -1,9 +1,12 @@
 %-----------------Traffic--------------
+arrived(Vehicle):-
+  arrivesAtForkAtTime(Vehicle, _, _).
+
 inTheIntersection(Vehicle):-
   entersForkAtTime(Vehicle, _, _).
 
 atTheIntersection(Vehicle):-
-  arrivesAtForkAtTime(Vehicle, _, _),
+  arrived(Vehicle),
   not inTheIntersection(Vehicle).
 
 atOrInTheIntersection(Vehicle):-
@@ -41,22 +44,31 @@ isOnLane(Vehicle, Lane):-
 laneOnFork(Lane, Fork):-
   laneFromTo(Lane, Fork, _).
 
+signalsAtFork(Vehicle, Signal, Fork):-
+  signalsAtForkAtTime(Vehicle, Signal, Fork, _).
+
 %------------------------------------------
 %--------------Rules pre-definitions-------
 %------------------------------------------
-wantsLane(Vehicle, Lane):-
-  signalsAtForkAtTime(Vehicle, Signal, Fork, _),
+requestsLane(Vehicle, Lane):-
+  signalsAtFork(Vehicle, Signal, Fork),
   laneOnFork(Lane, Fork),
   laneCorrectSignal(Lane, Signal).
 
 % vehicle on the planned lane
 reservedLane(Vehicle, Lane):-
   isOnLane(Vehicle, Lane),
-  wantsLane(Vehicle, Lane).
+  requestsLane(Vehicle, Lane).
+
+reservedLane(Vehicle, Lane2):-
+  isOnLane(Vehicle, Lane1),
+  requestsLane(Vehicle, Lane1),
+  overlaps(Lane1, Lane2),
+  not leftTheLane(Vehicle, Lane1).
 
 %---------------- Rules ---------------
 % Page 35:
-% At intersections without “STOP” or “YIELD” signs,
+% At intersections without `STOP' or `YIELD' signs,
 %  yield to traffic and pedestrians already in the intersection
 %  or just entering the intersection.
 mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside):-
@@ -65,13 +77,11 @@ mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside):-
 
 mustStopToYield(Vehicle1):-
   mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside),
-  wantsLane(Vehicle1, Lane1),
-  overlaps(Lane1, Lane2),
-  reservedLane(Vehicle2, Lane2),
-  not leftTheLane(Vehicle2, Lane1).
+  requestsLane(Vehicle1, Lane),
+  reservedLane(Vehicle2, Lane).
 
 % Page 35:
-% When there are “STOP” signs at all corners,
+% At intersections without “STOP” or “YIELD” signs,
 %  yield to the vehicle or bicycle that arrives first.
 mustYieldToForRule(Vehicle2, Vehicle1, firstInFirstOut):-
   atTheIntersection(Vehicle1),
