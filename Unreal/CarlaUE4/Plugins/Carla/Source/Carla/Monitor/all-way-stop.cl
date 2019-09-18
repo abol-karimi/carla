@@ -5,9 +5,12 @@ arrived(Vehicle):-
 inTheIntersection(Vehicle):-
   entersForkAtTime(Vehicle, _, _).
 
+entered(Vehicle):-
+  entersForkAtTime(Vehicle, _, _).
+
 atTheIntersection(Vehicle):-
   arrived(Vehicle),
-  not inTheIntersection(Vehicle).
+  not entered(Vehicle).
 
 atOrInTheIntersection(Vehicle):-
   inTheIntersection(Vehicle).
@@ -28,10 +31,10 @@ arrivedSameTime(Vehicle1, Vehicle2):-
   arrivesAtForkAtTime(Vehicle1, _, ArrivalTime),
   arrivesAtForkAtTime(Vehicle2, _, ArrivalTime).
 
-isToTheRightOf(Vehicle1, Vehicle2):-
+isOnRightOf(Vehicle1, Vehicle2):-
   isAtFork(Vehicle1, Fork1),
   isAtFork(Vehicle2, Fork2),
-  isToTheRightOf(Fork1, Fork2).
+  isOnRightOf(Fork1, Fork2).
 
 leftTheLane(Vehicle, Lane):-
   leavesLaneAtTime(Vehicle, Lane, _).
@@ -41,29 +44,29 @@ isOnLane(Vehicle, Lane):-
   entersLaneAtTime(Vehicle, Lane, _),
   not leftTheLane(Vehicle, Lane).
 
-laneOnFork(Lane, Fork):-
+branchOf(Lane, Fork):-
   laneFromTo(Lane, Fork, _).
 
-signalsAtFork(Vehicle, Signal, Fork):-
+signaledAtFork(Vehicle, Signal, Fork):-
   signalsAtForkAtTime(Vehicle, Signal, Fork, _).
 
 %------------------------------------------
 %--------------Rules pre-definitions-------
 %------------------------------------------
-requestsLane(Vehicle, Lane):-
-  signalsAtFork(Vehicle, Signal, Fork),
-  laneOnFork(Lane, Fork),
+requestedLane(Vehicle, Lane):-
+  signaledAtFork(Vehicle, Signal, Fork),
+  branchOf(Lane, Fork),
   laneCorrectSignal(Lane, Signal).
 
 % vehicle on the planned lane
-reservedLane(Vehicle, Lane):-
-  isOnLane(Vehicle, Lane),
-  requestsLane(Vehicle, Lane).
-
-reservedLane(Vehicle, Lane2):-
+reservedLane(Vehicle, Lane1):-
   isOnLane(Vehicle, Lane1),
-  requestsLane(Vehicle, Lane1),
-  overlaps(Lane1, Lane2),
+  requestedLane(Vehicle, Lane1).
+
+reservedLane(Vehicle, Lane1):-
+  isOnLane(Vehicle, Lane2),
+  requestedLane(Vehicle, Lane2),
+  overlaps(Lane2, Lane1),
   not leftTheLane(Vehicle, Lane1).
 
 %---------------- Rules ---------------
@@ -77,7 +80,7 @@ mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside):-
 
 mustStopToYield(Vehicle1):-
   mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside),
-  requestsLane(Vehicle1, Lane),
+  requestedLane(Vehicle1, Lane),
   reservedLane(Vehicle2, Lane).
 
 % Page 35:
@@ -99,7 +102,7 @@ mustYieldToForRule(Vehicle1, Vehicle2, yieldToRight):-
   atTheIntersection(Vehicle1),
   atTheIntersection(Vehicle2),
   arrivedSameTime(Vehicle1, Vehicle2),
-  isToTheRightOf(Vehicle2, Vehicle1).
+  isOnRightOf(Vehicle2, Vehicle1).
 
 mustStopToYield(Vehicle):-
   mustYieldToForRule(Vehicle, _, yieldToRight).

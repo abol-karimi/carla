@@ -156,12 +156,12 @@ void AMonitor::LoadGeometryFacts()
 		{
 			FString LeftFork = "f_";
 			FString RightFork = "f_";
-			if (Forks[i]->IsToTheRightOf(Forks[j])) // angle in (30, 150)
+			if (Forks[i]->IsOnRightOf(Forks[j])) // angle in (30, 150)
 			{
 				LeftFork += Forks[j]->GetName();
 				RightFork += Forks[i]->GetName();
 			}
-			else if (Forks[j]->IsToTheRightOf(Forks[i])) // angle in (-150, -30)
+			else if (Forks[j]->IsOnRightOf(Forks[i])) // angle in (-150, -30)
 			{
 				LeftFork += Forks[i]->GetName();
 				RightFork += Forks[j]->GetName();
@@ -170,7 +170,7 @@ void AMonitor::LoadGeometryFacts()
 			{
 				continue;
 			}
-			FString FactString = "isToTheRightOf("
+			FString FactString = "isOnRightOf("
 				+ RightFork + ", "
 				+ LeftFork + ").";
 			Geometry += TCHAR_TO_ANSI(*FactString);

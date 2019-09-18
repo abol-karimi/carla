@@ -108,7 +108,7 @@ void AFork::PostEditChangeProperty(FPropertyChangedEvent &PropertyChangedEvent)
 
 
 /// Formalization of "isToTheRightOf()" based on approaching angles of forks
-bool AFork::IsToTheRightOf(const AFork* OtherFork) const
+bool AFork::IsOnRightOf(const AFork* OtherFork) const
 {
 	auto Ego = FVector2D(GetActorForwardVector());
 	auto Other = FVector2D(OtherFork->GetActorForwardVector());

@@ -58,7 +58,7 @@ protected:
 #endif // WITH_EDITOR
 
 public:
-	bool IsToTheRightOf(const AFork* OtherFork) const;
+	bool IsOnRightOf(const AFork* OtherFork) const;
 	void AddExit(AExit* Exit);
 
 public:
