@@ -12,12 +12,6 @@ atTheIntersection(Vehicle):-
   arrived(Vehicle),
   not entered(Vehicle).
 
-atOrInTheIntersection(Vehicle):-
-  inTheIntersection(Vehicle).
-
-atOrInTheIntersection(Vehicle):-
-  atTheIntersection(Vehicle).
-
 isAtFork(Vehicle, Fork):-
   arrivesAtForkAtTime(Vehicle, Fork, Time),
   atTheIntersection(Vehicle).
@@ -109,7 +103,7 @@ mustStopToYield(Vehicle):-
 
 %-------------------------------------------------
 hasRightOfWay(Vehicle):-
-  atOrInTheIntersection(Vehicle),
+  arrived(Vehicle),
   not mustStopToYield(Vehicle).
 
 #show mustYieldToForRule/3.

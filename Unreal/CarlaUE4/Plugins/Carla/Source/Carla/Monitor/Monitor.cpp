@@ -366,7 +366,6 @@ void AMonitor::OnExitMonitor(
 {
 	ActorToEventsMap.Remove(OtherActor->GetName());
 	VehiclePointers.Remove(OtherActor->GetName());
-	Solve();
 }
 
 
@@ -434,15 +433,23 @@ void AMonitor::Solve()
 				else if (atom.match("hasRightOfWay", 1))
 				{
 					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2);
-					ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
-					AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
-					if (Controller != nullptr)
+					if (!VehiclePointers.Contains(VehicleName))
 					{
-						Controller->SetTrafficLightState(ETrafficLightState::Green);
+						UE_LOG(LogTemp, Warning, TEXT("%s not found in VehiclePointers!"), *VehicleName);
 					}
 					else
 					{
-						UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (hasRightOfWay)"), *VehicleName);
+						ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
+						AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
+						if (Controller != nullptr)
+						{
+							Controller->SetTrafficLightState(ETrafficLightState::Green);
+						}
+						else
+						{
+							UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (hasRightOfWay)"), *VehicleName);
+						}
+
 					}
 				}
 				FString AtomString(atom.to_string().c_str());
