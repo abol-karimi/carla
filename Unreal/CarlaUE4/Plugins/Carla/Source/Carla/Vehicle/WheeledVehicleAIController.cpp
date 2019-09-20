@@ -227,7 +227,7 @@ void AWheeledVehicleAIController::SetTurnSignal(const USplineComponent* Route)
 	auto Cosine = StartTangent.CosineAngle2D(FVector::VectorPlaneProject(EndTangent, FVector(0.f, 0.f, 1.f)));
 
 	EVehicleSignalState Signal = EVehicleSignalState::Off;
-	if (Cosine < 0.7f) // turning angle more than 45 degrees
+	if (Cosine < 0.866f) // turning angle more than 30 degrees
 	{
 		if (Z < 0)
 		{

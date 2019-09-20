@@ -71,6 +71,9 @@ public:
 
 	float TimeResolution = 0.5f; // Events occuring in the same 0.5 seconds interval are simultaneous
 
+	UPROPERTY(EditAnywhere)
+	FString RulesFilename = "uncontrolled-intersection.cl";
+
 private:
 	void CreateLogFile();
 	void SetupTriggers();

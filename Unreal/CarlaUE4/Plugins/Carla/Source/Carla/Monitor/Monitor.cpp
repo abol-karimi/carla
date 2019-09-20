@@ -236,7 +236,7 @@ void AMonitor::LoadGeometryFacts()
 
 void AMonitor::LoadTrafficRules()
 {
-	FString RulesFileFullName = FPaths::ProjectPluginsDir() + "Carla/Source/Carla/Monitor/all-way-stop.cl";
+	FString RulesFileFullName = FPaths::ProjectPluginsDir() + "Carla/Source/Carla/Monitor/" + RulesFilename;
 	std::ifstream RulesFile(TCHAR_TO_UTF8(*RulesFileFullName));
 	std::stringstream buffer;
 	buffer << RulesFile.rdbuf();
