@@ -34,7 +34,10 @@ void ALane::OnConstruction(const FTransform &Transform)
 {
 	Super::OnConstruction(Transform);
 
-	UE_LOG(LogTemp, Warning, TEXT("ALane OnConstruction called!"));
+	if (bInitCalled)
+	{ // Lane has changed since initial setup
+		SetupSplineMeshes();
+	}
 }
 
 void ALane::Init(AFork* MyFork, AExit* MyExit)
@@ -44,6 +47,8 @@ void ALane::Init(AFork* MyFork, AExit* MyExit)
 
 	SetupSpline();
 	SetupSplineMeshes();
+
+	bInitCalled = true;
 }
 
 FString ALane::GetCorrectSignal()

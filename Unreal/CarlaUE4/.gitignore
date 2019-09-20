@@ -13,6 +13,9 @@ Plugins/Carla/DerivedDataCache
 Plugins/Carla/Intermediate
 Plugins/Carla/Saved
 
+Plugins/RoadRunnerCarlaIntegration
+Plugins/RoadRunnerImporter
+
 Content/*
 !Content/Monitor/
 

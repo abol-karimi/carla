@@ -62,4 +62,6 @@ private:
 		FVector2D d1,
 		float& OutAlpha0,
 		float& OutAlpha1);
+
+	bool bInitCalled = false;
 };
