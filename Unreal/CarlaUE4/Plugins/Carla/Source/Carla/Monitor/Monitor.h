@@ -62,6 +62,13 @@ public:
 	UFUNCTION()
 		void OnExitLane(AActor* ThisActor, AActor* OtherActor);
 
+	UFUNCTION()
+		void OnExitIntersection(
+			UPrimitiveComponent* OverlappedComp,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex);
+
 public:
 	UPROPERTY()
 		UBillboardComponent* Billboard;

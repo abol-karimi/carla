@@ -105,6 +105,7 @@ void AMonitor::SetupTriggers()
 	{
 		ALane* Lane = Cast<ALane>(Actor);
 		AFork* Fork = Cast<AFork>(Actor);
+		AExit* Exit = Cast<AExit>(Actor);
 		if (Lane != nullptr)
 		{
 			Lane->OnActorBeginOverlap.AddDynamic(this, &AMonitor::OnEnterLane);
@@ -114,6 +115,10 @@ void AMonitor::SetupTriggers()
 		{
 			Fork->ArrivalTriggerVolume->OnComponentBeginOverlap.AddDynamic(this, &AMonitor::OnArrival);
 			Fork->EntranceTriggerVolume->OnComponentBeginOverlap.AddDynamic(this, &AMonitor::OnEntrance);
+		}
+		else if (Exit != nullptr)
+		{
+			Exit->TriggerVolume->OnComponentEndOverlap.AddDynamic(this, &AMonitor::OnExitIntersection);
 		}
 	}
 }
@@ -357,6 +362,23 @@ void AMonitor::OnExitLane(AActor* ThisActor, AActor* OtherActor)
 	Solve();
 }
 
+void AMonitor::OnExitIntersection(
+	UPrimitiveComponent* OverlappedComp,
+	AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex)
+{
+	int32 TimeStep = FMath::FloorToInt(GetWorld()->GetTimeSeconds() / TimeResolution);
+	FString ExitingActorName = "v_" + OtherActor->GetName();
+	FString ExitName = "e_" + OverlappedComp->GetOwner()->GetName();
+	FString Atom = "leavesExitAtTime("
+		+ ExitingActorName + ", "
+		+ ExitName + ", "
+		+ FString::FromInt(TimeStep) + ").";
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *(Atom));
+	AddEvent(OtherActor->GetName(), Atom);
+	Solve();
+}
 
 void AMonitor::OnExitMonitor(
 	UPrimitiveComponent* OverlappedComp,
@@ -366,6 +388,7 @@ void AMonitor::OnExitMonitor(
 {
 	ActorToEventsMap.Remove(OtherActor->GetName());
 	VehiclePointers.Remove(OtherActor->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("%s removed from monitor!"), *OtherActor->GetName());
 }
 
 
@@ -417,20 +440,43 @@ void AMonitor::Solve()
 			for (auto &atom : model.symbols()) {
 				if (atom.match("mustStopToYield", 1))
 				{
-					FString YieldingVehicleName = FString(atom.arguments()[0].name()).RightChop(2); // Chop "v_" off of the name
-					ACarlaWheeledVehicle* YieldingVehicle = VehiclePointers[YieldingVehicleName];
+					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2); // Chop "v_" off of the name
+					ACarlaWheeledVehicle* YieldingVehicle = VehiclePointers[VehicleName];
 					AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(YieldingVehicle->GetController());
 					if (Controller != nullptr)
 					{
 						Controller->SetTrafficLightState(ETrafficLightState::Red);
-						UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to stop!"), *YieldingVehicleName);
+						UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to stop!"), *VehicleName);
 					}
 					else
 					{
-						UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (mustYield)"), *YieldingVehicleName);
+						UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (mustYield)"), *VehicleName);
 					}
 				}
-				else if (atom.match("hasRightOfWay", 1))
+				else if (atom.match("mustSlowToYield", 1))
+				{
+					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2);
+					if (!VehiclePointers.Contains(VehicleName))
+					{
+						UE_LOG(LogTemp, Warning, TEXT("%s not found in VehiclePointers!"), *VehicleName);
+					}
+					else
+					{
+						ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
+						AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
+						if (Controller != nullptr)
+						{
+							Controller->SetSpeedLimit(20.f);
+							UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to slow down!"), *VehicleName);
+						}
+						else
+						{
+							UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (mustSlowToYield)"), *VehicleName);
+						}
+
+					}
+				}
+				else if (atom.match("needNotStop", 1))
 				{
 					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2);
 					if (!VehiclePointers.Contains(VehicleName))
@@ -449,7 +495,6 @@ void AMonitor::Solve()
 						{
 							UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (hasRightOfWay)"), *VehicleName);
 						}
-
 					}
 				}
 				FString AtomString(atom.to_string().c_str());

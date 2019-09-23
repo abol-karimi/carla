@@ -62,6 +62,13 @@ void AFork::PostEditChangeProperty(FPropertyChangedEvent &PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
+	if (PropertyChangedEvent.GetPropertyName() == FName("ArrivalTriggerVolume"))
+	{
+		float XLength = ArrivalTriggerVolume->GetScaledBoxExtent().X;
+		ArrivalTriggerVolume->SetRelativeLocation(FVector(-XLength, 0.f, 0.f));
+		return;
+	}
+
 	if (PropertyChangedEvent.GetPropertyName() != FName("bActive"))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AFork property %s changed!"), *(PropertyChangedEvent.GetPropertyName().ToString()));
