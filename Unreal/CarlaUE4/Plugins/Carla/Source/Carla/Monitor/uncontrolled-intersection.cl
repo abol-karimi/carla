@@ -2,8 +2,12 @@
 arrived(Vehicle):-
   arrivesAtForkAtTime(Vehicle, _, _).
 
+exited(Vehicle):-
+  leavesExitAtTime(Vehicle, _, _).
+
 inTheIntersection(Vehicle):-
-  entersForkAtTime(Vehicle, _, _).
+  arrived(Vehicle),
+  not exited(Vehicle).
 
 entered(Vehicle):-
   entersForkAtTime(Vehicle, _, _).
@@ -102,10 +106,10 @@ mustStopToYield(Vehicle):-
   mustYieldToForRule(Vehicle, _, yieldToRight).
 
 %-------------------------------------------------
-hasRightOfWay(Vehicle):-
+needNotStop(Vehicle):-
   arrived(Vehicle),
   not mustStopToYield(Vehicle).
 
 #show mustYieldToForRule/3.
 #show mustStopToYield/1.
-#show hasRightOfWay/1.
+#show needNotStop/1.
