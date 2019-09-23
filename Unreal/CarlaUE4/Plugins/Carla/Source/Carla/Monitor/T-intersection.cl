@@ -100,8 +100,11 @@ mustYieldToForRule(Vehicle1, Vehicle2, throughRoadFirst):-
   vehicleOnThroughRoad(Vehicle2),
   not vehicleOnThroughRoad(Vehicle1).
 
-mustStopToYield(Vehicle):-
-  mustYieldToForRule(Vehicle, _, throughRoadFirst).
+mustStopToYield(Vehicle1):-
+  mustYieldToForRule(Vehicle1, Vehicle2, throughRoadFirst),
+  requestedLane(Vehicle1, Lane1),
+  requestedLane(Vehicle2, Lane2),
+  overlaps(Lane1, Lane2).
 
 %-------------------------------------------------
 needNotStop(Vehicle):-
