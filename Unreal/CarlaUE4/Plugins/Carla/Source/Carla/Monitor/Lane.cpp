@@ -15,7 +15,7 @@ ALane::ALane(const FObjectInitializer &ObjectInitializer)
 
 	Spline = CreateDefaultSubobject<USplineComponent>(TEXT("Spline"));
 	Spline->SetupAttachment(RootComponent);
-	Spline->SetHiddenInGame(true);
+	Spline->SetHiddenInGame(false);
 	Spline->SetMobility(EComponentMobility::Static);
 	Spline->RegisterComponent();
 
@@ -27,7 +27,7 @@ ALane::ALane(const FObjectInitializer &ObjectInitializer)
 	(TEXT("Material'/Game/Monitor/TransparentBlue_M.TransparentBlue_M'"));
 	Material = MaterialFinder.Object;
 
-	SetActorHiddenInGame(true);
+	SetActorHiddenInGame(false);
 }
 
 void ALane::OnConstruction(const FTransform &Transform)

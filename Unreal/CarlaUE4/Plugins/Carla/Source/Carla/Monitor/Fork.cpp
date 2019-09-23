@@ -16,7 +16,7 @@ AFork::AFork(const FObjectInitializer &ObjectInitializer)
 
 	EntranceTriggerVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Entrance"));
 	EntranceTriggerVolume->SetupAttachment(RootComponent);
-	EntranceTriggerVolume->SetHiddenInGame(true);
+	EntranceTriggerVolume->SetHiddenInGame(false);
 	EntranceTriggerVolume->SetMobility(EComponentMobility::Static);
 	EntranceTriggerVolume->SetCollisionProfileName(FName("OverlapAll"));
 	EntranceTriggerVolume->SetGenerateOverlapEvents(true);
@@ -26,7 +26,7 @@ AFork::AFork(const FObjectInitializer &ObjectInitializer)
 
 	ArrivalTriggerVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Arrival"));
 	ArrivalTriggerVolume->SetupAttachment(RootComponent);
-	ArrivalTriggerVolume->SetHiddenInGame(true);
+	ArrivalTriggerVolume->SetHiddenInGame(false);
 	ArrivalTriggerVolume->SetMobility(EComponentMobility::Static);
 	ArrivalTriggerVolume->SetCollisionProfileName(FName("OverlapAll"));
 	ArrivalTriggerVolume->SetGenerateOverlapEvents(true);
@@ -36,12 +36,12 @@ AFork::AFork(const FObjectInitializer &ObjectInitializer)
 
 	ForwardArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("ForwardArrow"));
 	ForwardArrow->SetupAttachment(RootComponent);
-	ForwardArrow->SetHiddenInGame(true);
+	ForwardArrow->SetHiddenInGame(false);
 	ForwardArrow->SetMobility(EComponentMobility::Static);
 	ForwardArrow->SetWorldScale3D(FVector{ 3.f, 3.f, 3.f });
 	ForwardArrow->SetArrowColor(FLinearColor(0, 255, 0));
 
-	SetActorHiddenInGame(true);
+	SetActorHiddenInGame(false);
 }
 
 // Called when the game starts or when spawned

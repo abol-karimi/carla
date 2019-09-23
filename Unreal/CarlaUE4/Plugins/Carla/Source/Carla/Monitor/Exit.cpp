@@ -13,7 +13,7 @@ AExit::AExit(const FObjectInitializer &ObjectInitializer)
 
 	TriggerVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerVolume"));
 	TriggerVolume->SetupAttachment(RootComponent);
-	TriggerVolume->SetHiddenInGame(true);
+	TriggerVolume->SetHiddenInGame(false);
 	TriggerVolume->SetMobility(EComponentMobility::Static);
 	TriggerVolume->SetCollisionProfileName(FName("OverlapAll"));
 	TriggerVolume->SetGenerateOverlapEvents(true);
@@ -22,11 +22,11 @@ AExit::AExit(const FObjectInitializer &ObjectInitializer)
 
 	ForwardArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("ForwardArrow"));
 	ForwardArrow->SetupAttachment(RootComponent);
-	ForwardArrow->SetHiddenInGame(true);
+	ForwardArrow->SetHiddenInGame(false);
 	ForwardArrow->SetMobility(EComponentMobility::Static);
 	ForwardArrow->SetWorldScale3D(FVector{ 3.f, 3.f, 3.f });
 
-	SetActorHiddenInGame(true);
+	SetActorHiddenInGame(false);
 }
 
 // Called when the game starts or when spawned
