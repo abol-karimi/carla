@@ -6,7 +6,7 @@ exited(Vehicle):-
   leavesExitAtTime(Vehicle, _, _).
 
 inTheIntersection(Vehicle):-
-  arrived(Vehicle),
+  entered(Vehicle),
   not exited(Vehicle).
 
 entered(Vehicle):-
@@ -16,26 +16,11 @@ atTheIntersection(Vehicle):-
   arrived(Vehicle),
   not entered(Vehicle).
 
-isAtFork(Vehicle, Fork):-
-  arrivesAtForkAtTime(Vehicle, Fork, Time),
-  atTheIntersection(Vehicle).
-
-arrivedEarlierThan(Vehicle1, Vehicle2):-
-  arrivesAtForkAtTime(Vehicle1, _, ArrivalTime1),
-  arrivesAtForkAtTime(Vehicle2, _, ArrivalTime2),
-  ArrivalTime1 < ArrivalTime2.
-
-arrivedSameTime(Vehicle1, Vehicle2):-
-  arrivesAtForkAtTime(Vehicle1, _, ArrivalTime),
-  arrivesAtForkAtTime(Vehicle2, _, ArrivalTime).
-
-isOnRightOf(Vehicle1, Vehicle2):-
-  isAtFork(Vehicle1, Fork1),
-  isAtFork(Vehicle2, Fork2),
-  isOnRightOf(Fork1, Fork2).
-
 leftTheLane(Vehicle, Lane):-
   leavesLaneAtTime(Vehicle, Lane, _).
+
+enteredLane(Vehicle, Lane):-
+  entersLaneAtTime(Vehicle, Lane, _).
 
 % Does not handle re-entries.
 isOnLane(Vehicle, Lane):-
@@ -90,6 +75,13 @@ mustSlowToYield(Vehicle1):-
   requestedLane(Vehicle1, Lane),
   reservedLane(Vehicle2, Lane).
 
+mustStopToYield(Vehicle1):-
+  mustYieldToForRule(Vehicle1, Vehicle2, yieldToInside),
+  requestedLane(Vehicle1, Lane),
+  reservedLane(Vehicle2, Lane),
+  not vehicleOnThroughRoad(Vehicle1).
+
+
 % Page 35:
 % At “T” intersections without “STOP” or “YIELD” signs,
 % yield to traffic and pedestrians on the through road.
@@ -104,14 +96,37 @@ mustStopToYield(Vehicle1):-
   mustYieldToForRule(Vehicle1, Vehicle2, throughRoadFirst),
   requestedLane(Vehicle1, Lane1),
   requestedLane(Vehicle2, Lane2),
-  overlaps(Lane1, Lane2).
+  overlaps(Lane1, Lane2),
+  not leftTheLane(Vehicle2, Lane1).
+
+% Page 35:
+% When you turn left,
+% give the right-of-way to all vehicles approaching
+% that are close enough to be dangerous.
+mustYieldToForRule(Vehicle1, Vehicle2, leftTurnFromThroughRoad):-
+  signalsAtForkAtTime(Vehicle1, left, _, _),
+  inTheIntersection(Vehicle1),
+  inTheIntersection(Vehicle2),
+  vehicleOnThroughRoad(Vehicle2),
+  requestedLane(Vehicle1, Lane1),
+  requestedLane(Vehicle2, Lane2),
+  overlaps(Lane1, Lane2),
+  not enteredLane(Vehicle1, Lane2).
+
+mustStopToYield(Vehicle):-
+  mustYieldToForRule(Vehicle, _, leftTurnFromThroughRoad).
 
 %-------------------------------------------------
 needNotStop(Vehicle):-
   arrived(Vehicle),
   not mustStopToYield(Vehicle).
 
+needNotSlow(Vehicle):-
+  needNotStop(Vehicle),
+  not mustSlowToYield(Vehicle).
+
 #show mustYieldToForRule/3.
 #show mustStopToYield/1.
 #show mustSlowToYield/1.
 #show needNotStop/1.
+#show needNotSlow/1.

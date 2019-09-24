@@ -37,6 +37,9 @@ isOnRightOf(Vehicle1, Vehicle2):-
 leftTheLane(Vehicle, Lane):-
   leavesLaneAtTime(Vehicle, Lane, _).
 
+enteredLane(Vehicle, Lane):-
+  entersLaneAtTime(Vehicle, Lane, _).
+
 % Does not handle re-entries.
 isOnLane(Vehicle, Lane):-
   entersLaneAtTime(Vehicle, Lane, _),
@@ -47,6 +50,12 @@ branchOf(Lane, Fork):-
 
 signaledAtFork(Vehicle, Signal, Fork):-
   signalsAtForkAtTime(Vehicle, Signal, Fork, _).
+
+turningLeft(Vehicle):-
+  signaledAtFork(Vehicle, left, _).
+
+goingStraight(Vehicle):-
+  signaledAtFork(Vehicle, off, _).
 
 %------------------------------------------
 %--------------Rules pre-definitions-------
@@ -105,6 +114,24 @@ mustYieldToForRule(Vehicle1, Vehicle2, yieldToRight):-
 mustStopToYield(Vehicle):-
   mustYieldToForRule(Vehicle, _, yieldToRight).
 
+
+% Page 35:
+% When you turn left,
+% give the right-of-way to all vehicles approaching
+% that are close enough to be dangerous.
+mustYieldToForRule(Vehicle1, Vehicle2, leftTurn):-
+  turningLeft(Vehicle1),
+  goingStraight(Vehicle2),
+  inTheIntersection(Vehicle1),
+  inTheIntersection(Vehicle2),
+  requestedLane(Vehicle1, Lane1),
+  requestedLane(Vehicle2, Lane2),
+  overlaps(Lane1, Lane2),
+  not enteredLane(Vehicle1, Lane2),
+  not leftTheLane(Vehicle2, Lane1).
+
+mustStopToYield(Vehicle):-
+  mustYieldToForRule(Vehicle, _, leftTurn).
 %-------------------------------------------------
 needNotStop(Vehicle):-
   arrived(Vehicle),

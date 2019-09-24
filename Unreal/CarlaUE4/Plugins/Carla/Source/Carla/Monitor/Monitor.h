@@ -94,6 +94,11 @@ private:
 	template <class ActorClass>
 	void GetIntersectingActors(TArray<ActorClass*>& OutArray);
 
+	void StopVehicle(FString VehicleName);
+	void UnstopVehicle(FString VehicleName);
+	void SlowVehicle(FString VehicleName);
+	void UnslowVehicle(FString VehicleName);
+
 	FString LogFileName;
 	FString LogFileFullName;
 	size_t NumberOfForks;

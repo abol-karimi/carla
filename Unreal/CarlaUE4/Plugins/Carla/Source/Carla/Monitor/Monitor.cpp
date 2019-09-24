@@ -441,61 +441,22 @@ void AMonitor::Solve()
 				if (atom.match("mustStopToYield", 1))
 				{
 					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2); // Chop "v_" off of the name
-					ACarlaWheeledVehicle* YieldingVehicle = VehiclePointers[VehicleName];
-					AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(YieldingVehicle->GetController());
-					if (Controller != nullptr)
-					{
-						Controller->SetTrafficLightState(ETrafficLightState::Red);
-						UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to stop!"), *VehicleName);
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (mustYield)"), *VehicleName);
-					}
+					StopVehicle(VehicleName);
 				}
 				else if (atom.match("mustSlowToYield", 1))
 				{
 					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2);
-					if (!VehiclePointers.Contains(VehicleName))
-					{
-						UE_LOG(LogTemp, Warning, TEXT("%s not found in VehiclePointers!"), *VehicleName);
-					}
-					else
-					{
-						ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
-						AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
-						if (Controller != nullptr)
-						{
-							Controller->SetSpeedLimit(20.f);
-							UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to slow down!"), *VehicleName);
-						}
-						else
-						{
-							UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (mustSlowToYield)"), *VehicleName);
-						}
-
-					}
+					SlowVehicle(VehicleName);
 				}
 				else if (atom.match("needNotStop", 1))
 				{
 					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2);
-					if (!VehiclePointers.Contains(VehicleName))
-					{
-						UE_LOG(LogTemp, Warning, TEXT("%s not found in VehiclePointers!"), *VehicleName);
-					}
-					else
-					{
-						ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
-						AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
-						if (Controller != nullptr)
-						{
-							Controller->SetTrafficLightState(ETrafficLightState::Green);
-						}
-						else
-						{
-							UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (hasRightOfWay)"), *VehicleName);
-						}
-					}
+					UnstopVehicle(VehicleName);
+				}
+				else if (atom.match("needNotSlow", 1))
+				{
+					FString VehicleName = FString(atom.arguments()[0].name()).RightChop(2);
+					UnslowVehicle(VehicleName);
 				}
 				FString AtomString(atom.to_string().c_str());
 				Model.Append("\t" + AtomString + "\n");
@@ -538,5 +499,86 @@ FString AMonitor::SignalToString(EVehicleSignalState Signal)
 		return FString("emergency");
 	default:
 		return FString("off");
+	}
+}
+
+void AMonitor::StopVehicle(FString VehicleName)
+{
+	ACarlaWheeledVehicle* YieldingVehicle = VehiclePointers[VehicleName];
+	AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(YieldingVehicle->GetController());
+	if (Controller != nullptr)
+	{
+		Controller->SetTrafficLightState(ETrafficLightState::Red);
+		UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to stop!"), *VehicleName);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (mustStop)"), *VehicleName);
+	}
+}
+
+void AMonitor::UnstopVehicle(FString VehicleName)
+{
+	if (!VehiclePointers.Contains(VehicleName))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s not found in VehiclePointers!"), *VehicleName);
+	}
+	else
+	{
+		ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
+		AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
+		if (Controller != nullptr)
+		{
+			Controller->SetTrafficLightState(ETrafficLightState::Green);
+			UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to move!"), *VehicleName);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (hasRightOfWay)"), *VehicleName);
+		}
+	}
+}
+
+void AMonitor::SlowVehicle(FString VehicleName)
+{
+	if (!VehiclePointers.Contains(VehicleName))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s not found in VehiclePointers!"), *VehicleName);
+	}
+	else
+	{
+		ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
+		AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
+		if (Controller != nullptr)
+		{
+			Controller->SetSpeedLimit(20.f);
+			UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to slow down!"), *VehicleName);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (mustSlowToYield)"), *VehicleName);
+		}
+	}
+}
+
+void AMonitor::UnslowVehicle(FString VehicleName)
+{
+	if (!VehiclePointers.Contains(VehicleName))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s not found in VehiclePointers!"), *VehicleName);
+	}
+	else
+	{
+		ACarlaWheeledVehicle* Vehicle = VehiclePointers[VehicleName];
+		AWheeledVehicleAIController* Controller = Cast<AWheeledVehicleAIController>(Vehicle->GetController());
+		if (Controller != nullptr)
+		{
+			Controller->SetSpeedLimit(30.f);
+			UE_LOG(LogTemp, Warning, TEXT("Setting %s's controller to speed up!"), *VehicleName);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s's controller not found! (needNotSlow)"), *VehicleName);
+		}
 	}
 }
