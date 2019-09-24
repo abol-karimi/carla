@@ -6,7 +6,7 @@ exited(Vehicle):-
   leavesExitAtTime(Vehicle, _, _).
 
 inTheIntersection(Vehicle):-
-  arrived(Vehicle),
+  entered(Vehicle),
   not exited(Vehicle).
 
 entered(Vehicle):-

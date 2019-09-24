@@ -111,7 +111,8 @@ mustYieldToForRule(Vehicle1, Vehicle2, leftTurnFromThroughRoad):-
   requestedLane(Vehicle1, Lane1),
   requestedLane(Vehicle2, Lane2),
   overlaps(Lane1, Lane2),
-  not enteredLane(Vehicle1, Lane2).
+  not enteredLane(Vehicle1, Lane2),
+  not leftTheLane(Vehicle2, Lane1).
 
 mustStopToYield(Vehicle):-
   mustYieldToForRule(Vehicle, _, leftTurnFromThroughRoad).
