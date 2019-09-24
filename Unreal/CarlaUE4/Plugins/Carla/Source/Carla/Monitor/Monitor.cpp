@@ -56,7 +56,7 @@ AMonitor::AMonitor(const FObjectInitializer &ObjectInitializer)
 	ExtentBox->SetMobility(EComponentMobility::Static);
 	ExtentBox->SetCollisionProfileName(FName("OverlapAll"));
 	ExtentBox->SetGenerateOverlapEvents(true);
-	ExtentBox->SetBoxExtent(FVector{ 1800.0f, 1800.0f, 100.0f });
+	ExtentBox->SetBoxExtent(FVector{ 1000.0f, 1000.0f, 100.0f });
 	ExtentBox->ShapeColor = FColor(255, 255, 255);
 
 	SetActorHiddenInGame(false);
