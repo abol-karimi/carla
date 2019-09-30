@@ -73,6 +73,10 @@ def main():
     try:
 
         world = client.get_world()
+
+        weather = carla.WeatherParameters(0.0,0.0,0.0,0.0,0.0,45.0)
+        world.set_weather(weather)
+
         blueprints = world.get_blueprint_library().filter(args.filter)
 
         if args.safe:

@@ -1,33 +1,33 @@
 %-----------------Traffic--------------
 arrived(Vehicle):-
-  arrivesAtForkAtTime(Vehicle, _, _).
+  arrivedAtForkAtTime(Vehicle, _, _).
 
 exited(Vehicle):-
-  leavesExitAtTime(Vehicle, _, _).
+  exitedFromAtTime(Vehicle, _, _).
 
 inTheIntersection(Vehicle):-
   entered(Vehicle),
   not exited(Vehicle).
 
 entered(Vehicle):-
-  entersForkAtTime(Vehicle, _, _).
+  enteredForkAtTime(Vehicle, _, _).
 
 atTheIntersection(Vehicle):-
   arrived(Vehicle),
   not entered(Vehicle).
 
 isAtFork(Vehicle, Fork):-
-  arrivesAtForkAtTime(Vehicle, Fork, Time),
+  arrivedAtForkAtTime(Vehicle, Fork, Time),
   atTheIntersection(Vehicle).
 
 arrivedEarlierThan(Vehicle1, Vehicle2):-
-  arrivesAtForkAtTime(Vehicle1, _, ArrivalTime1),
-  arrivesAtForkAtTime(Vehicle2, _, ArrivalTime2),
+  arrivedAtForkAtTime(Vehicle1, _, ArrivalTime1),
+  arrivedAtForkAtTime(Vehicle2, _, ArrivalTime2),
   ArrivalTime1 < ArrivalTime2.
 
 arrivedSameTime(Vehicle1, Vehicle2):-
-  arrivesAtForkAtTime(Vehicle1, _, ArrivalTime),
-  arrivesAtForkAtTime(Vehicle2, _, ArrivalTime).
+  arrivedAtForkAtTime(Vehicle1, _, ArrivalTime),
+  arrivedAtForkAtTime(Vehicle2, _, ArrivalTime).
 
 isOnRightOf(Vehicle1, Vehicle2):-
   isAtFork(Vehicle1, Fork1),
@@ -35,14 +35,14 @@ isOnRightOf(Vehicle1, Vehicle2):-
   isOnRightOf(Fork1, Fork2).
 
 leftTheLane(Vehicle, Lane):-
-  leavesLaneAtTime(Vehicle, Lane, _).
+  leftLaneAtTime(Vehicle, Lane, _).
 
 enteredLane(Vehicle, Lane):-
-  entersLaneAtTime(Vehicle, Lane, _).
+  enteredLaneAtTime(Vehicle, Lane, _).
 
 % Does not handle re-entries.
 isOnLane(Vehicle, Lane):-
-  entersLaneAtTime(Vehicle, Lane, _),
+  enteredLaneAtTime(Vehicle, Lane, _),
   not leftTheLane(Vehicle, Lane).
 
 branchOf(Lane, Fork):-
@@ -92,7 +92,7 @@ mustStopToYield(Vehicle1):-
 
 % Page 35:
 % At intersections without “STOP” or “YIELD” signs,
-%  yield to the vehicle or bicycle that arrives first.
+%  yield to the vehicle or bicycle that arrived first.
 mustYieldToForRule(Vehicle2, Vehicle1, firstInFirstOut):-
   atTheIntersection(Vehicle1),
   atTheIntersection(Vehicle2),

@@ -286,22 +286,22 @@ void AMonitor::OnArrival(
 	int32 TimeStep = FMath::FloorToInt(GetWorld()->GetTimeSeconds() / TimeResolution);
 	FString ArrivingVehicleID = "v_" + OtherActor->GetName();
 	FString Fork = "f_" + OverlappedComp->GetOwner()->GetName();
-	FString EventAtom = "arrivesAtForkAtTime("
+	FString Atom = "arrivedAtForkAtTime("
 		+ ArrivingVehicleID + ", "
 		+ Fork + ", "
 		+ FString::FromInt(TimeStep) + ").";
-	AddEvent(OtherActor->GetName(), EventAtom);
+	AddEvent(OtherActor->GetName(), Atom);
 
 	ACarlaWheeledVehicle* ArrivingVehicle = Cast<ACarlaWheeledVehicle>(OtherActor);
 	if (ArrivingVehicle != nullptr)
 	{
 		FString SignalString = SignalToString(ArrivingVehicle->GetSignalState());
-		EventAtom = "signalsAtForkAtTime("
+		Atom = "signaledAtForkAtTime("
 			+ ArrivingVehicleID + ", "
 			+ SignalString + ", "
 			+ Fork + ", "
 			+ FString::FromInt(TimeStep) + ").";
-		AddEvent(OtherActor->GetName(), EventAtom);
+		AddEvent(OtherActor->GetName(), Atom);
 		VehiclePointers.Add(OtherActor->GetName(), ArrivingVehicle);
 	}
 	else
@@ -324,7 +324,7 @@ void AMonitor::OnEntrance(
 	uint32 TimeStep = FMath::FloorToInt(GetWorld()->GetTimeSeconds() / TimeResolution);
 	FString EnteringVehicle = "v_" + OtherActor->GetName();
 	FString Fork = "f_" + OverlappedComp->GetOwner()->GetName();
-	FString Atom = "entersForkAtTime("
+	FString Atom = "enteredForkAtTime("
 		+ EnteringVehicle + ", "
 		+ Fork + ", "
 		+ FString::FromInt(TimeStep) + ").";
@@ -339,7 +339,7 @@ void AMonitor::OnEnterLane(AActor* ThisActor, AActor* OtherActor)
 	int32 TimeStep = FMath::FloorToInt(GetWorld()->GetTimeSeconds() / TimeResolution);
 	FString EnteringActorName = "v_" + OtherActor->GetName();
 	FString LaneName = "l_" + ThisActor->GetName();
-	FString Atom = "entersLaneAtTime("
+	FString Atom = "enteredLaneAtTime("
 		+ EnteringActorName + ", "
 		+ LaneName + ", "
 		+ FString::FromInt(TimeStep) + ").";
@@ -353,11 +353,10 @@ void AMonitor::OnExitLane(AActor* ThisActor, AActor* OtherActor)
 	int32 TimeStep = FMath::FloorToInt(GetWorld()->GetTimeSeconds() / TimeResolution);
 	FString ExitingActorName = "v_" + OtherActor->GetName();
 	FString LaneName = "l_" + ThisActor->GetName();
-	FString Atom = "leavesLaneAtTime("
+	FString Atom = "leftLaneAtTime("
 		+ ExitingActorName + ", "
 		+ LaneName + ", "
 		+ FString::FromInt(TimeStep) + ").";
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *(Atom));
 	AddEvent(OtherActor->GetName(), Atom);
 	Solve();
 }
@@ -371,11 +370,10 @@ void AMonitor::OnExitIntersection(
 	int32 TimeStep = FMath::FloorToInt(GetWorld()->GetTimeSeconds() / TimeResolution);
 	FString ExitingActorName = "v_" + OtherActor->GetName();
 	FString ExitName = "e_" + OverlappedComp->GetOwner()->GetName();
-	FString Atom = "leavesExitAtTime("
+	FString Atom = "exitedFromAtTime("
 		+ ExitingActorName + ", "
 		+ ExitName + ", "
 		+ FString::FromInt(TimeStep) + ").";
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *(Atom));
 	AddEvent(OtherActor->GetName(), Atom);
 	Solve();
 }

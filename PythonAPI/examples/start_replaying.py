@@ -74,6 +74,9 @@ def main():
         client = carla.Client(args.host, args.port)
         client.set_timeout(60.0)
 
+        weather = carla.WeatherParameters(0.0,0.0,0.0,0.0,0.0,45.0)
+        client.get_world().set_weather(weather)
+
         client.set_replayer_time_factor(args.time_factor)
         print(client.replay_file(args.recorder_filename, args.start, args.duration, args.camera))
 
