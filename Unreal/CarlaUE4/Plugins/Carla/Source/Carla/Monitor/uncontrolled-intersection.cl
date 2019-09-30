@@ -49,7 +49,7 @@ branchOf(Lane, Fork):-
   laneFromTo(Lane, Fork, _).
 
 signaledAtFork(Vehicle, Signal, Fork):-
-  signalsAtForkAtTime(Vehicle, Signal, Fork, _).
+  signaledAtForkAtTime(Vehicle, Signal, Fork, _).
 
 turningLeft(Vehicle):-
   signaledAtFork(Vehicle, left, _).

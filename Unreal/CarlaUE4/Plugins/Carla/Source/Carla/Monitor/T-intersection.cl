@@ -1,44 +1,44 @@
 %-----------------Traffic--------------
 arrived(Vehicle):-
-  arrivesAtForkAtTime(Vehicle, _, _).
+  arrivedAtForkAtTime(Vehicle, _, _).
 
 exited(Vehicle):-
-  leavesExitAtTime(Vehicle, _, _).
+  exitedFromAtTime(Vehicle, _, _).
 
 inTheIntersection(Vehicle):-
   entered(Vehicle),
   not exited(Vehicle).
 
 entered(Vehicle):-
-  entersForkAtTime(Vehicle, _, _).
+  enteredForkAtTime(Vehicle, _, _).
 
 atTheIntersection(Vehicle):-
   arrived(Vehicle),
   not entered(Vehicle).
 
 leftTheLane(Vehicle, Lane):-
-  leavesLaneAtTime(Vehicle, Lane, _).
+  leftLaneAtTime(Vehicle, Lane, _).
 
 enteredLane(Vehicle, Lane):-
-  entersLaneAtTime(Vehicle, Lane, _).
+  enteredLaneAtTime(Vehicle, Lane, _).
 
 % Does not handle re-entries.
 isOnLane(Vehicle, Lane):-
-  entersLaneAtTime(Vehicle, Lane, _),
+  enteredLaneAtTime(Vehicle, Lane, _),
   not leftTheLane(Vehicle, Lane).
 
 branchOf(Lane, Fork):-
   laneFromTo(Lane, Fork, _).
 
 signaledAtFork(Vehicle, Signal, Fork):-
-  signalsAtForkAtTime(Vehicle, Signal, Fork, _).
+  signaledAtForkAtTime(Vehicle, Signal, Fork, _).
 
 forkOnThroughRoad(Fork):-
   laneFromTo(Lane, Fork, _),
   laneCorrectSignal(Lane, off).
 
 vehicleOnThroughRoad(Vehicle):-
-  arrivesAtForkAtTime(Vehicle, Fork, _),
+  arrivedAtForkAtTime(Vehicle, Fork, _),
   forkOnThroughRoad(Fork),
   not exited(Vehicle).
 %------------------------------------------
@@ -104,7 +104,7 @@ mustStopToYield(Vehicle1):-
 % give the right-of-way to all vehicles approaching
 % that are close enough to be dangerous.
 mustYieldToForRule(Vehicle1, Vehicle2, leftTurnFromThroughRoad):-
-  signalsAtForkAtTime(Vehicle1, left, _, _),
+  signaledAtForkAtTime(Vehicle1, left, _, _),
   inTheIntersection(Vehicle1),
   inTheIntersection(Vehicle2),
   vehicleOnThroughRoad(Vehicle2),
