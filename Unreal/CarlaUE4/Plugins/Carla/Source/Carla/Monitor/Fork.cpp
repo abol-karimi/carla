@@ -20,9 +20,9 @@ AFork::AFork(const FObjectInitializer &ObjectInitializer)
 	EntranceTriggerVolume->SetMobility(EComponentMobility::Static);
 	EntranceTriggerVolume->SetCollisionProfileName(FName("OverlapAll"));
 	EntranceTriggerVolume->SetGenerateOverlapEvents(true);
-	EntranceTriggerVolume->SetBoxExtent(FVector{ 30.0f, 150.0f, 50.0f });
+	EntranceTriggerVolume->SetBoxExtent(FVector{ 20.0f, 150.0f, 50.0f });
 	EntranceTriggerVolume->ShapeColor = FColor(0, 255, 0);
-	EntranceTriggerVolume->SetRelativeLocation(FVector(30.f, 0.f, 0.f));
+	EntranceTriggerVolume->SetRelativeLocation(FVector(20.f, 0.f, 0.f));
 
 	ArrivalTriggerVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("Arrival"));
 	ArrivalTriggerVolume->SetupAttachment(RootComponent);
